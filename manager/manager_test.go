@@ -204,6 +204,34 @@ func TestManager_EnableThing(t *testing.T) {
 	}
 }
 
+func TestManager_BatchUpdateDeviceNickname(t *testing.T) {
+	err := manager.BatchUpdateDeviceNickname(&options.BatchUpdateDeviceNicknameOptions{
+		&options.UpdateDeviceNicknameOptions{
+			ProductKey: ProductKey,
+			DeviceName: DeviceName,
+			Nickname:   "非测试设备",
+		},
+	})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	info, err := manager.QueryDeviceInfo(&options.QueryDeviceOptions{
+		ProductKey: ProductKey,
+		DeviceName: DeviceName,
+	})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	t.Log(info.Nickname)
+	if info.Nickname != "非测试设备" {
+		t.Error("Failed to update device nickname")
+	}
+}
+
 func TestManager_DeleteDevice(t *testing.T) {
 	err := manager.DeleteDevice(&options.QueryDeviceOptions{
 		ProductKey: ProductKey,

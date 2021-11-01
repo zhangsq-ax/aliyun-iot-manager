@@ -124,6 +124,24 @@ func (m *Manager) BatchGetDeviceState(opts *options.BatchDeviceStateOptions) (*[
 	return &res.DeviceStatusList.DeviceStatus, nil
 }
 
+// BatchUpdateDeviceNickname 批量修改设备备注名称
+func (m *Manager) BatchUpdateDeviceNickname(opts *options.BatchUpdateDeviceNicknameOptions) error {
+	req, err := opts.GenerateRequest(m.iotInstanceId)
+	if err != nil {
+		return err
+	}
+	res, err := m.client.BatchUpdateDeviceNickname(req)
+	if err != nil {
+		return err
+	}
+
+	if !res.Success {
+		return fmt.Errorf("%s - %s", res.Code, res.ErrorMessage)
+	}
+
+	return nil
+}
+
 // DeleteDevice 删除设备
 func (m *Manager) DeleteDevice(opts *options.QueryDeviceOptions) error {
 	req, err := opts.GenerateDeleteDeviceRequest(m.iotInstanceId)
